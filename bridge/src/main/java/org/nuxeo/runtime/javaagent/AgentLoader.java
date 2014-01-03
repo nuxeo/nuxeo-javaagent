@@ -16,9 +16,17 @@ import com.sun.tools.attach.VirtualMachine;
 
 public class AgentLoader {
 
+    public static final AgentLoader INSTANCE = new AgentLoader();
+
     protected Object agent = load();
 
-    public <I> I getAgent(Class<I> type) {
+    protected ObjectSizer sizer = AgentHandler.newHandler(ObjectSizer.class, agent);
+
+    public ObjectSizer getSizer() {
+        return sizer;
+    }
+
+    protected <I> I getAgent(Class<I> type) {
         return AgentHandler.newHandler(type, agent);
     }
 
