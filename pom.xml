@@ -8,14 +8,28 @@
   </parent>
 
   <groupId>org.nuxeo.runtime</groupId>
-  <artifactId>nuxeo-javaagent</artifactId>
-  <name>Nuxeo Java agent</name>
-  <description>Nuxeo Java agent</description>
+  <artifactId>nuxeo-javaagent-parent</artifactId>
+  <name>Nuxeo Java Agent Parent</name>
+  <description>Nuxeo Java Agent</description>
+  <packaging>pom</packaging>
 
-  <dependencies>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-    </dependency>
-  </dependencies>
+  <modules>
+    <module>main</module>
+    <module>bridge</module>
+  </modules>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+         <groupId>org.nuxeo.runtime</groupId>
+         <artifactId>nuxeo-javaagent-main</artifactId>
+         <version>${version}</version>
+      </dependency>
+      <dependency>
+         <groupId>org.nuxeo.runtime</groupId>
+         <artifactId>nuxeo-javaagent-bridge</artifactId>
+         <version>${version}</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 </project>
