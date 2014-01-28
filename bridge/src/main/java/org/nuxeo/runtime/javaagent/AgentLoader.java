@@ -2,6 +2,7 @@ package org.nuxeo.runtime.javaagent;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -71,7 +72,16 @@ public class AgentLoader {
         int p = nameOfRunningVM.indexOf('@');
         String pid = nameOfRunningVM.substring(0, p);
 
-        String jarLocation = locateAgentJar(Framework.getRuntime().getHome());
+        File home;
+        try {
+            home = Framework.getRuntime().getHome().getCanonicalFile();
+        } catch (IOException cause) {
+            throw new RuntimeException("cannot normalize runtime home path",
+                    cause);
+        }
+        File jarParentFolder = new File(home.getParentFile(), "bin");
+        String jarLocation = locateAgentJar(jarParentFolder);
+
         if (jarLocation == null) {
             boolean isUnderTest = Boolean.parseBoolean(Framework.getProperty("org.nuxeo.runtime.testing", "false"));
             if (!isUnderTest) {
