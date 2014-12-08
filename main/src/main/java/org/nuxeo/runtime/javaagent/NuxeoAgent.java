@@ -90,8 +90,7 @@ public class NuxeoAgent {
             try {
                 return visit(eachField.get(each));
             } catch (Exception e) {
-                throw new RuntimeException("Exception trying to access field "
-                        + eachField, e);
+                throw new RuntimeException("Exception trying to access field " + eachField, e);
             } finally {
                 eachField.setAccessible(oldAccessible);
             }

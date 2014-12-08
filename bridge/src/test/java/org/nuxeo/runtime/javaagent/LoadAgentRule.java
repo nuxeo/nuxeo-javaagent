@@ -30,13 +30,13 @@ public class LoadAgentRule implements MethodRule {
 
     protected void injectSizer(Object target) {
         Field[] fields = target.getClass().getDeclaredFields();
-        for (Field each:fields) {
+        for (Field each : fields) {
             if (!ObjectSizer.class.equals(each.getType())) {
                 continue;
             }
             InjectSizer inject = each.getAnnotation(InjectSizer.class);
             if (inject == null) {
-                 continue;
+                continue;
             }
             each.setAccessible(true);
             try {
@@ -46,8 +46,5 @@ public class LoadAgentRule implements MethodRule {
             }
         }
     }
-
-
-
 
 }

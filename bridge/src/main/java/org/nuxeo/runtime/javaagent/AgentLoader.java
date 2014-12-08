@@ -34,40 +34,37 @@ public class AgentLoader {
     protected Object load() {
         try {
             loadAgentIfNeeded();
-        } catch (NoSuchMethodException | SecurityException
-                | IllegalAccessException | IllegalArgumentException
-                | InvocationTargetException | MalformedURLException
-                | URISyntaxException cause) {
-           throw new RuntimeException("Cannot load nuxeo agent jar in virtual machine", cause);
+        } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
+                | InvocationTargetException | MalformedURLException | URISyntaxException cause) {
+            throw new RuntimeException("Cannot load nuxeo agent jar in virtual machine", cause);
         }
         try {
             return loadInstance();
-        } catch (ClassNotFoundException | NoSuchFieldException
-                | SecurityException | IllegalArgumentException
+        } catch (ClassNotFoundException | NoSuchFieldException | SecurityException | IllegalArgumentException
                 | IllegalAccessException cause) {
             throw new RuntimeException("Cannot load nuxeo agent", cause);
         }
     }
 
-    protected Object loadInstance()
-            throws ClassNotFoundException, NoSuchFieldException,
-            SecurityException, IllegalArgumentException, IllegalAccessException {
+    protected Object loadInstance() throws ClassNotFoundException, NoSuchFieldException, SecurityException,
+            IllegalArgumentException, IllegalAccessException {
         Class<?> clazz = AgentLoader.class.getClassLoader().loadClass("org.nuxeo.runtime.javaagent.NuxeoAgent");
         Field agentField = clazz.getDeclaredField("agent");
         agentField.setAccessible(true);
         return agentField.get(null);
     }
 
-    protected void loadAgentIfNeeded() throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, MalformedURLException, URISyntaxException {
+    protected void loadAgentIfNeeded() throws NoSuchMethodException, SecurityException, IllegalAccessException,
+            IllegalArgumentException, InvocationTargetException, MalformedURLException, URISyntaxException {
         try {
-            AgentLoader.class.getClassLoader().loadClass(
-                    "org.nuxeo.runtime.javaagent.NuxeoAgent");
+            AgentLoader.class.getClassLoader().loadClass("org.nuxeo.runtime.javaagent.NuxeoAgent");
         } catch (ClassNotFoundException e) {
             loadAgent();
         }
     }
 
-    protected void loadAgent() throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, MalformedURLException, URISyntaxException {
+    protected void loadAgent() throws NoSuchMethodException, SecurityException, IllegalAccessException,
+            IllegalArgumentException, InvocationTargetException, MalformedURLException, URISyntaxException {
         String nameOfRunningVM = ManagementFactory.getRuntimeMXBean().getName();
         int p = nameOfRunningVM.indexOf('@');
         String pid = nameOfRunningVM.substring(0, p);
@@ -76,8 +73,7 @@ public class AgentLoader {
         try {
             home = Framework.getRuntime().getHome().getCanonicalFile();
         } catch (IOException cause) {
-            throw new RuntimeException("cannot normalize runtime home path",
-                    cause);
+            throw new RuntimeException("cannot normalize runtime home path", cause);
         }
         File jarParentFolder = new File(home.getParentFile(), "bin");
         String jarLocation = locateAgentJar(jarParentFolder);
@@ -89,13 +85,12 @@ public class AgentLoader {
             }
             URL testResource = AgentLoader.class.getResource("/");
             File testClasses = Paths.get(testResource.toURI()).toFile();
-            File mainProject = new File(
-                    testClasses.getParentFile().getParentFile().getParentFile(),
-                    "main");
+            File mainProject = new File(testClasses.getParentFile().getParentFile().getParentFile(), "main");
             File target = new File(mainProject, "target");
             jarLocation = locateAgentJar(target);
             if (jarLocation == null) {
-                throw new RuntimeException("Cannot locate nuxeo agent jar in target folder " + target + ", did you forgot to run package target");
+                throw new RuntimeException("Cannot locate nuxeo agent jar in target folder " + target
+                        + ", did you forgot to run package target");
             }
         }
         try {
@@ -107,7 +102,7 @@ public class AgentLoader {
         }
     }
 
-    protected String locateAgentJar(File dir)  {
+    protected String locateAgentJar(File dir) {
         File[] jars = dir.listFiles(new FilenameFilter() {
 
             @Override
